@@ -1,17 +1,20 @@
 <template>
-  <FullCalendar defaultView="dayGridMonth"
-   :plugins="calendarPlugins" 
-   :selectable="true"
-   :events="events"
-    @select="dateSelected"/>
+  <FullCalendar
+    defaultView="dayGridMonth"
+    :plugins="calendarPlugins"
+    :selectable="true"
+    :events="events"
+    @select="dateSelected"
+    @eventRender="eventRendered"
+  />
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
-import interactionPlugin from '@fullcalendar/interaction';
-import Axios from 'axios';
+import interactionPlugin from "@fullcalendar/interaction";
+import Axios from "axios";
 
 @Component({
   components: {
@@ -24,35 +27,65 @@ import Axios from 'axios';
   }
 })
 export default class CalendarContainer extends Vue {
-events: any[] =[
-   { title: 'event 1', start: new Date('2019-04-01'),end: new Date('2019-04-02'), startStr:'2019-04-01', endStr:'2019-04-02' },
-   { title: 'event 2', date: '2019-04-02' }
-];
+  events: any[] = [
+    {
+      title: "event 1",
+      start: new Date("2019-04-01"),
+      end: new Date("2019-04-02"),
+      startStr: "2019-04-01",
+      endStr: "2019-04-02"
+    },
+    { title: "event 2", date: "2019-04-02" }
+  ];
 
-async mounted(){
-   const response =  await Axios.get('http://localhost:3000/DetailEvents');
-   const appontments = response.data;
-    appontments.map((appointment:any)=>{
-        const startDate = new Date(parseInt(appointment['StartDateTime'].replace(/\D+/g, ''))/10000);
-        const endDate = new Date(parseInt(appointment['EndDateTime'].replace(/\D+/g, ''))/10000);
-        this.events.push({
-          'title': appointment.EventSubject,
-          'startStr': `${startDate.getFullYear()}-${startDate.getMonth()+1}-${startDate.getDate()}`,
-          'endStr': `${endDate.getFullYear()}-${endDate.getMonth()+1}-${endDate.getDate()}`,
-          'start': startDate,
-          'end': endDate,
-        })
+  async mounted() {
+    const response = await Axios.get("http://localhost:3000/DetailEvents");
+    const appontments = response.data;
+    appontments.map((appointment: any) => {
+      const startDate = new Date(
+        parseInt(appointment["StartDateTime"].replace(/\D+/g, "")) / 10000
+      );
+      const endDate = new Date(
+        parseInt(appointment["EndDateTime"].replace(/\D+/g, "")) / 10000
+      );
+      this.events.push({
+        title: appointment.EventSubject,
+        startStr: `${startDate.getFullYear()}-${startDate.getMonth() +
+          1}-${startDate.getDate()}`,
+        endStr: `${endDate.getFullYear()}-${endDate.getMonth() +
+          1}-${endDate.getDate()}`,
+        start: startDate,
+        end: endDate
+      });
     });
-}
+  }
 
-dateSelected(event:any){
-  console.log(event);
-}
+  dateSelected(event: any) {
+    console.log(event);
+  }
+
+  eventRendered(info: any) {
+    console.log(info);
+    info.el.innerHTML = `<b>hello ${info.event.title} at ${this.formatAMPM(
+      info.event.start
+    )}</b>`;
+  }
+
+  formatAMPM(date: Date) {
+    let hours = date.getHours();
+    let minutes = date.getMinutes();
+    let ampm = hours >= 12 ? "pm" : "am";
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    let minute = minutes < 10 ? "0" + minutes : minutes;
+    var strTime = hours + ":" + minute + " " + ampm;
+    return strTime;
+  }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import '~@fullcalendar/core/main.css';
-@import '~@fullcalendar/daygrid/main.css';
+@import "~@fullcalendar/core/main.css";
+@import "~@fullcalendar/daygrid/main.css";
 </style>
