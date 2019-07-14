@@ -12,7 +12,9 @@
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
-      "webpack-env"
+      "webpack-env",
+      "fullcalendar__vue'",
+      "fullcalendar__interaction"
     ],
     "paths": {
       "@/*": [
