@@ -1,10 +1,11 @@
 <template>
   <FullCalendar
-    defaultView="dayGridMonth"
+    defaultView="timelineMonth"
     :plugins="calendarPlugins"
     :selectable="true"
     :events="events"
-    :hiddenDays="[ 1, 2, 5, 6, 4, 0]"
+    :hiddenDays="[0,1,2,4,5,6]"
+    :validRange="validRange"
     ref="fullCalendar"
     @select="dateSelected"
     @eventRender="eventRendered"
@@ -18,6 +19,7 @@ import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import listPlugin from '@fullcalendar/list';
+import timelinePlugin from '@fullcalendar/timeline';
 import Axios from "axios";
 
 @Component({
@@ -26,11 +28,12 @@ import Axios from "axios";
   },
   data() {
     return {
-      calendarPlugins: [dayGridPlugin, interactionPlugin]
+      calendarPlugins: [timelinePlugin, interactionPlugin]
     };
   }
 })
 export default class FullCalendarContainer extends Vue {
+  //defaultView=dayGridMonth
   events: any[] = [
     {
       title: "event 1",
@@ -41,7 +44,10 @@ export default class FullCalendarContainer extends Vue {
     },
     { title: "event 2", date: "2019-04-02" }
   ];
-
+validRange:any= {
+    start: '2019-01-01',
+    end: '2019-08-01'
+  }
   async mounted() {
     const response = await Axios.get("http://demo1807516.mockable.io/appointments"); //http://localhost:3000/DetailEvents
     console.log(response);
@@ -88,6 +94,11 @@ export default class FullCalendarContainer extends Vue {
     var strTime = hours + ":" + minute + " " + ampm;
     return strTime;
   }
+
+  viewRendered(view: any, el:any){
+    debugger;
+    console.log(view);
+  }
 }
 </script>
 
@@ -95,4 +106,5 @@ export default class FullCalendarContainer extends Vue {
 <style scoped lang="scss">
 @import "~@fullcalendar/core/main.css";
 @import "~@fullcalendar/daygrid/main.css";
+@import "~@fullcalendar/timeline/main.css"
 </style>
