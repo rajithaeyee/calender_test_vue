@@ -14,7 +14,9 @@
     "types": [
       "webpack-env",
       "fullcalendar__vue'",
-      "fullcalendar__interaction"
+      "fullcalendar__interaction",
+      "syncfuion__ej2-vue-schedule",
+      "fullcalendar__list"
     ],
     "paths": {
       "@/*": [

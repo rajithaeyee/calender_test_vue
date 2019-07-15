@@ -4,8 +4,11 @@
     :plugins="calendarPlugins"
     :selectable="true"
     :events="events"
+    :hiddenDays="[ 1, 2, 5, 6, 4, 0]"
+    ref="fullCalendar"
     @select="dateSelected"
     @eventRender="eventRendered"
+    
   />
 </template>
 
@@ -14,6 +17,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import FullCalendar from "@fullcalendar/vue";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import listPlugin from '@fullcalendar/list';
 import Axios from "axios";
 
 @Component({
@@ -26,7 +30,7 @@ import Axios from "axios";
     };
   }
 })
-export default class CalendarContainer extends Vue {
+export default class FullCalendarContainer extends Vue {
   events: any[] = [
     {
       title: "event 1",
@@ -39,8 +43,9 @@ export default class CalendarContainer extends Vue {
   ];
 
   async mounted() {
-    const response = await Axios.get("http://localhost:3000/DetailEvents");
-    const appontments = response.data;
+    const response = await Axios.get("http://demo1807516.mockable.io/appointments"); //http://localhost:3000/DetailEvents
+    console.log(response);
+    const appontments = response.data.DetailEvents;
     appontments.map((appointment: any) => {
       const startDate = new Date(
         parseInt(appointment["StartDateTime"].replace(/\D+/g, "")) / 10000
@@ -69,6 +74,8 @@ export default class CalendarContainer extends Vue {
     info.el.innerHTML = `<b>hello ${info.event.title} at ${this.formatAMPM(
       info.event.start
     )}</b>`;
+    info.el.style.backgroundColor = "#3ce49e";
+    info.el.style.borderColor = "#3ce49e";
   }
 
   formatAMPM(date: Date) {
