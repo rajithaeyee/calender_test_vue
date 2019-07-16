@@ -35,7 +35,6 @@ export default class SyncfusionCalendarContainer extends Vue {
     eventSettings:EventSettings=<EventSettings>{
       dataSource: []
     };
-
   async mounted() {
     const response = await Axios.get("http://demo1807516.mockable.io/appointments"); //http://localhost:3000/DetailEvents
     console.log(response);

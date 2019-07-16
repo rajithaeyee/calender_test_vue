@@ -19,6 +19,11 @@ export default new Router({
       path: '/SyncfusionCalendar',
       name: 'SyncfusionCalendar',
       component: SyncfusionCalendar
+    },
+    {
+      path: '/KendoCalendar',
+      name: 'KendoCalendar',
+      component: KendoCalendar
     }
   ]
 })
